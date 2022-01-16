@@ -28,8 +28,8 @@
     </template>
 
     <div v-if="surveys.loading" class="flex justify-center">Loading...</div>
-    <div v-else>
-      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+    <div v-else-if="surveys.data.length">
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3">
         <SurveyListItem
           v-for="(survey, ind) in surveys.data"
           :key="survey.id"
@@ -51,7 +51,7 @@
             :key="i"
             :disabled="!link.url"
             href="#"
-            @click="getForPage($event,link)"
+            @click="getForPage($event, link)"
             aria-current="page"
             class="relative inline-flex items-center px-4 py-2 border text-sm font-medium whitespace-nowrap"
             :class="[
@@ -66,6 +66,9 @@
           </a>
         </nav>
       </div>
+    </div>
+    <div v-else class="text-gray-600 text-center py-16">
+      Your don't have surveys yet
     </div>
   </PageComponent>
 </template>
@@ -91,8 +94,6 @@ function deleteSurvey(survey) {
     });
   }
 }
-
-
 
 function getForPage(ev, link) {
   ev.preventDefault();
