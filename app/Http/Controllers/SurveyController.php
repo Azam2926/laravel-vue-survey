@@ -27,7 +27,7 @@ class SurveyController extends Controller
     public function index(Request $request)
     {
         $user = $request->user();
-        return SurveyResource::collection(Survey::where('user_id', $user->id)->paginate(50));
+        return SurveyResource::collection(Survey::where('user_id', $user->id)->paginate(6));
     }
 
     /**
@@ -80,6 +80,16 @@ class SurveyController extends Controller
      */
     public function showForGuest(Survey $survey)
     {
+        if (!$survey->status) {
+            return response("", 404);
+        }
+
+        $currentDate = new \DateTime();
+        $expireDate = new \DateTime($survey->expire_date);
+        if ($currentDate > $expireDate) {
+            return response("", 404);
+        }
+
         return new SurveyResource($survey);
     }
 
